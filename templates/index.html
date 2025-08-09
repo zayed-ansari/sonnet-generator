@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poem Generator</title>
+    <style>
+        /* Romantic Styling with Line-by-Line Animation */
+        @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@400;600&family=Playfair+Display:wght@400;700&display=swap');
+
+        body {
+            background: linear-gradient(135deg, #1a0611, #3a1a2c);
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            color: #f9f0f3;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: rgba(255, 245, 250, 0.08);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 
+                0 0 40px rgba(231, 142, 161, 0.4),
+                inset 0 0 20px rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8em;
+            color: #ffd7e4;
+            text-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(255, 215, 228, 0.5);
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+            text-align: center;
+            background: linear-gradient(45deg, #ffd7e4, #ff9abb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.welcome {
+            text-align: center;
+            font-style: italic;
+            color: #ffd7e4;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+
+        button {
+            background: linear-gradient(145deg, #ff85a2, #ff6080);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1.4em;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            letter-spacing: 1px;
+            display: block;
+            margin: 0 auto 25px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 96, 128, 0.6);
+        }
+
+        .poem-box {
+    background: linear-gradient(145deg, rgba(255, 240, 245, 0.95), rgba(255, 255, 255, 0.98));
+    border: 2px solid rgba(255, 215, 228, 0.5);
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.2em;
+    color: #8B0000;
+    line-height: 1.6; /* Reduced from 2.2 */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 
+        0 0 30px rgba(255, 182, 193, 0.3),
+        inset 0 0 15px rgba(255, 255, 255, 0.1);
+    position: relative;
+    min-height: 200px;
+    text-align: center;
+    overflow: auto;
+}
+
+.poem-line {
+    display: block;
+    margin-bottom: 0.5em; /* Reduced from 1.2em */
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    animation: fadeInUp 1s ease-in-out forwards;
+    letter-spacing: 0.5px;
+}
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Floating Hearts */
+        .hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 18px;
+            color: rgba(255, 96, 128, 0.15);
+            animation: float 15s linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes float {
+            0% { 
+                transform: translateY(100vh) rotate(0deg) scale(0.5);
+                opacity: 0.3;
+            }
+            100% { 
+                transform: translateY(-100vh) rotate(360deg) scale(1.2);
+                opacity: 0.1;
+            }
+        }
+
+        /* Glow Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 192, 203, 0.3), transparent);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .overlay.glowing {
+            animation: glow 2s ease-in-out;
+        }
+
+        @keyframes glow {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Copy Button */
+        #copyBtn {
+            background: linear-gradient(145deg, #ff9abb, #ff85a2);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1.2em;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-top: 20px;
+            display: none;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #copyBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 154, 187, 0.6);
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2.2em;
+            }
+            
+            button {
+                font-size: 1.2em;
+                padding: 10px 25px;
+            }
+            
+            .poem-box {
+                font-size: 1.1em;
+                padding: 20px;
+            }
+        }
+
+        @media screen and (max-width: 400px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .poem-box {
+                font-size: 1em;
+                padding: 15px;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+    <div class="container">
+        <h1>💖 Verses Unspoken</h1>
+        <p class="welcome">Let me craft a sonnet just for you...</p>
+        <button id="generateBtn">Compose a Sonnet</button>
+        
+        <div class="poem-box" id="poemContainer">
+            <!-- Poem lines will appear here -->
+        </div>
+        <button id="copyBtn">Copy This Sonnet</button>
+    </div>
+
+    <div class="hearts" id="heartsContainer"></div>
+
+    <script>
+        // Create floating hearts
+        function createHearts() {
+            const heartsContainer = document.getElementById('heartsContainer');
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                heart.style.fontSize = (Math.random() * 10 + 15) + 'px';
+                heartsContainer.appendChild(heart);
+            }
+        }
+
+        // Function to add a single line with animation and delay
+        function addPoemLine(container, text) {
+            return new Promise(resolve => {
+                const lineElement = document.createElement('div');
+                lineElement.className = 'poem-line';
+                lineElement.textContent = text;
+                container.appendChild(lineElement);
+                container.scrollTop = container.scrollHeight;
+                
+                // Total delay: 1s animation + 0.5s pause = 1.5s between lines
+                setTimeout(resolve, 1500);
+            });
+        }
+
+        // Generate poem line by line with proper delays
+        async function generatePoem() {
+            const btn = document.getElementById('generateBtn');
+            const poemContainer = document.getElementById('poemContainer');
+            const copyBtn = document.getElementById('copyBtn');
+            const overlay = document.getElementById('overlay');
+            
+            // Reset state
+            btn.disabled = true;
+            btn.textContent = 'Writing your sonnet...';
+            poemContainer.innerHTML = '';
+            copyBtn.style.display = 'none';
+
+            // Trigger glow effect
+            overlay.classList.add('glowing');
+            setTimeout(() => overlay.classList.remove('glowing'), 2000);
+            
+            try {
+                // Fetch poem from Flask backend
+                const response = await fetch("/generate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" }
+                });
+                
+                if (!response.ok) throw new Error('Failed to generate poem');
+                const data = await response.json();
+                
+                // Process poem lines
+                const poemLines = data.poem
+                    .replace(/\[POEM_START\]/g, '')
+                    .replace(/\[POEM_END\]/g, '')
+                    .split('\n')
+                    .filter(line => line.trim() !== '')
+                    .slice(0, 6); // Limit to 6 lines max
+
+                // Display lines one by one with delays
+                for (const line of poemLines) {
+                    await addPoemLine(poemContainer, line.trim());
+                }
+
+                // Finalize
+                btn.disabled = false;
+                btn.textContent = 'Let My Heart Speak Again';
+                copyBtn.style.display = 'block';
+
+            } catch (error) {
+                console.error('Error:', error);
+                await addPoemLine(poemContainer, "The muse hath lost her quill...");
+                await addPoemLine(poemContainer, "Pray, try once more anon.");
+                btn.disabled = false;
+                btn.textContent = 'Try Again';
+            }
+        }
+
+        // Copy poem to clipboard
+        document.getElementById('copyBtn').addEventListener('click', () => {
+            const poemLines = document.querySelectorAll('.poem-line');
+            const poemText = Array.from(poemLines).map(line => line.textContent).join('\n');
+            
+            navigator.clipboard.writeText(poemText).then(() => {
+                alert('Poem copied to your heart! ❤️');
+            }).catch(err => {
+                console.error('Failed to copy poem:', err);
+                alert('Failed to copy poem. Please try again.');
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createHearts();
+            document.getElementById('generateBtn').addEventListener('click', generatePoem);
+        });
+    </script>
+</body>
+</html>
