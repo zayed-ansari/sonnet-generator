@@ -13,7 +13,7 @@ A Flask-based web app that generates original sonnets using a fine-tuned GPT-2 m
 
 **Clone the repo:**
 ```
-git clone https://github.com/yourusername/sonnet-generator.git
+git clone https://github.com/zayed-ansari/sonnet-generator.git
 cd sonnet-generator
 ```
 **Install dependencies:**
@@ -47,7 +47,3 @@ requirements.txt: List of dependencies (Flask, Torch, Transformers, etc.).
 
 Demo
 Video: [LinkedIn post link](https://www.linkedin.com/feed/update/urn:li:activity:7324122776359915520/)
-
-Source code available in this repo.
-
-Feel free to contribute or open issues!
